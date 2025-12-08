@@ -27,42 +27,98 @@ class ThunderList:
             B[i] = self.A[i]
 
         self.A = B
+        self.size = size
 
     def __str__(self):
-        result = '[ '
+        if self.n > 0:
+            result = '[ '
 
-        for i in range(self.n):
-            result += (str(self.A[i]) + ", ")
+            for i in range(self.n):
+                result += (str(self.A[i]) + ", ")
 
-        result = result[:-2] + ' ]'
-
+            result = result[:-2] + ' ]'
+        
+        else:
+            result = '[]'
+        
         return result
     
-# 5. indexing [D]
-# 6. pop [D]
-# 7. clear [D]
-# 8. find [D]
-# 9. insert [D]
+    def __getitem__(self, index:int):
+        if (-1*self.n) <= index < 0:
+            return self.A[index + self.n]
+        elif 0 <= index < self.n:
+            return self.A[index]
+        raise IndexError(f"Index out of range!")
+    
+    def pop(self):
+        item = self.A[self.n-1]
+
+        self.A[self.n - 1] = None
+        self.n -= 1
+
+        print(item)
+
+    def clear(self):
+        self.n = 0
+        self.size = 1
+    
+    def index(self, item):
+        for i in range(self.n):
+            print(f'{self.A[i]} and {item}')
+            if self.A[i] == item:
+                return i
+        raise ValueError(f"Item not found!")
+    
+    def insert(self, pos, item):
+        if self.n == self.size:
+            self.__reassign(pos, item, True)
+        else:
+            self.__reassign(pos, item)
+        self.n += 1
+
+    def __reassign(self, pos, item, new_list = False):
+        if new_list:
+            B = self.__create_list(self.size + 8)
+            self.size += 8
+            j = 0 # Index for B
+            for i in range(self.n):
+                if i == pos:
+                    B[j] = item
+                    B[j+1] = self.A[i]
+                    j += 1    
+                else:
+                    B[j] = self.A[i]
+                j += 1
+            self.A = B
+        
+        else:
+            for i in range(self.n, pos, -1):
+                self.A[i] = self.A[i - 1]
+            self.A[pos] = item
+
 # 10. delete [D]
 # 11. remove [D]
 
 # sort/min/max/sum
 # extend
-# negative indexing
 # slicing
 # Merge
 
 # use
 L = ThunderList()
 
-print(len(L))
-
 L.append(8)
 L.append('Hello')
 L.append('World')
 L.append(True)
 L.append(3.14)
+L.append('a')
+L.append('b')
+L.append('c')
+L.append('d')
 
-print(len(L))
-
+print(L)
+L.insert(1, 200)
+print(L)
+L.insert(1, 100)
 print(L)
